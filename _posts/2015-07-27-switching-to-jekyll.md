@@ -1,14 +1,14 @@
 ---
 layout: post
-title: Switching to Jekyl
+title: Switching to Jekyll
 comments: true
 date: 2015-07-27 20:47
 showInNav: true
-summary: So I've decided to migrate my blog from PHP/WordPress to Jekyl.
+summary: So I've decided to migrate my blog from PHP/WordPress to Jekyll.
 ---
 I've not updated my blog in quite a while, & thought it was better to start
   anew with a new design/blog platform as a learning experience. So this new
-  design is [Jekyl-based](https://jekyllrb.com/); I had tried to get a site
+  design is [Jekyll-based](https://jekyllrb.com/); I had tried to get a site
   working with Metalsmith but couldn't get my head around it :s
 
 Since this is a static site,

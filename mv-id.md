@@ -1,7 +1,6 @@
 ---
 layout: page
-title: Nope
-permalink: /mv-id
+title: MV-ID
 comments: false
 showInNav: true
 summary: “mv-id” for WordPress is based on the work of the currently retired

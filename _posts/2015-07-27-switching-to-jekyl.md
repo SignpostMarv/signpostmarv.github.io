@@ -25,3 +25,8 @@ I'm also taking the rather lazy option of not migrating all the content at
 
 If prompted, I may blog further about the process/decision of migrating away
   from PHP/WordPress-based sites.
+
+## Updated
+
+After some difficulty getting the ftp server to behave last night,
+  I've migrated the site over to github pages.

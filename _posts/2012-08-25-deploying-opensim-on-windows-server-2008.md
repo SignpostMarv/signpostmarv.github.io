@@ -7,6 +7,7 @@ author: SignpostMarv
 categories: OpenSim
 tags: how-to "Windows Server 2008" "Windows Server 2008 R2"
 showInNav: true
+comments: true
 ---
 Since writing the [Windows Server 2008](2011/02/10/deploying-opensim-on-windows-server-2008) guide I’ve changed how I deploy OpenSim and I’m also using Windows Server 2008 R2. These instructions also assume you’ll be developing your own patches, rather than pre-compiled binaries. These instructions will not cover “hardening” or other security-related aspects of managing Windows Server 2008 R2, nor will it cover fine-tuning performance of any of the software used. They also differ slightly from how deploy islands at work, i.e. I compile in c# express on my workstation rather than on the server.
 

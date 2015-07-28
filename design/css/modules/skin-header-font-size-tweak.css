@@ -1,0 +1,53 @@
+@media (max-width: 960px){
+  header h1 a{
+    font-size: calc(1em * (.85)) ;
+  }
+}
+
+@media (max-width: 720px){
+  header h1 a{
+    font-size: calc(1em * (.85 * .85 * .85)) ;
+  }
+}
+
+@media (max-width: 600px){
+  header h1 a{
+    font-size: calc(1em * (.85 * .85 * .85 * .85)) ;
+  }
+}
+
+@media (max-width: 480px){
+  header h1 a{
+    font-size: calc(1em * (.85 * .85 * .85 * .85 * .85)) ;
+  }
+}
+
+@media (max-width: 400px){
+  header h1 a{
+    font-size: calc(1em * (.85 * .85 * .85 * .85 * .85 * .85)) ;
+  }
+}
+
+@media (max-width: 360px){
+  header h1 a{
+    font-size: calc(1em * (.85 * .85 * .85 * .85 * .85 * .85 * .85)) ;
+  }
+}
+
+@media (max-width: 320px){
+  header h1 a{
+    font-size: calc(1em * (.85 * .85 * .85 * .85 * .85 * .85 * .85 * .85)) ;
+  }
+}
+
+@media (max-width: 280px){
+  header h1 a{
+    font-size: calc(1em * (.85 * .85 * .85 * .85 * .85 * .85 * .85 * .85 * .85)) ;
+  }
+}
+
+@media (max-width: 240px){
+  header h1 a{
+    font-size: calc(1em * (.85 * .85 * .85 * .85 * .85 * .85 * .85 * .85 * .85 * .85)) ;
+  }
+}

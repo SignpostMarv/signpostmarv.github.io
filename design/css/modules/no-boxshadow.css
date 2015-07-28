@@ -1,0 +1,24 @@
+.no-boxshadow{
+  header,
+  footer
+  {
+    border-style: solid ;
+    border-color: #dbdbdb ;
+    border-color: rgba(0, 0, 0, 0.14) ;
+    border-width: 0 3px 8px ;
+  }
+  footer{
+    border-top-width: 3px ;
+  }
+  body > * > *{
+    border-style: solid ;
+    border-color: #dbdbdb ;
+    border-color: rgba(0, 0, 0, 0.14) ;
+    border-width: 0 1px 4px ;
+  }
+  header > *,
+  footer > *
+  {
+    border-width: 0 ;
+  }
+}

@@ -1,0 +1,25 @@
+@import url('./polymer-shadows.css');
+
+header,
+footer{
+  @mixin --shadow-elevation-8dp ;
+}
+body > * > *{
+  @mixin --shadow-elevation-4dp ;
+}
+
+header > *,
+footer > *{
+  @mixin --shadow-none ;
+}
+
+nav > ul > li > a{
+  @mixin --shadow-transition ;
+  @mixin --shadow-elevation-2dp ;
+  &:hover, &:focus{
+    @mixin --shadow-elevation-6dp ;
+  }
+  &:active{
+    @mixin --shadow-elevation-4dp ;
+  }
+}

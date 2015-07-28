@@ -1,0 +1,37 @@
+<head>
+<title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
+<meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
+<base href="{{ site.baseurl | prepend: site.url }}">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="css/style.min.css">
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css?family=Noto+Sans%7CNoto+Serif"
+>
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css?family=Roboto+Mono%7CRoboto+Condensed"
+>
+<link
+  rel="stylesheet"
+  href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
+>
+<link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
+<link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ "/feed.xml" | prepend: site.baseurl | prepend: site.url }}" />
+<script
+  src="libs/fontfaceobserver/fontfaceobserver.js"
+></script>
+<script
+  src="libs/modernizr/modernizr.js"
+></script>
+<script
+  data-manual
+  src="libs/prism/prism.js"
+></script>
+<script
+  defer
+  async
+  src="js/loaders.js"
+></script>
+</head>

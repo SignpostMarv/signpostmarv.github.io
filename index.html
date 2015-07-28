@@ -1,0 +1,26 @@
+---
+layout: default
+---
+<ol class="hfeed">
+{% for page in site.posts %}
+<li>
+  <article class="h-entry">
+    <header>
+      <h1><a class="p-name" href="{{ page.url }}">{{ page.title }}</a></h1>
+{% if page.summary %}
+      <p class="p-summary">{{ page.summary }}</p>
+{% endif %}
+      <p><time class="dt-published" datetime="{{page.date | date: %FT%T%:z}}">
+{% assign d = page.date | date: "%-d"  %}
+{{ page.date | date: "%B %d" }}{% case d %}
+{% when '1' or '21' or '31' %}st
+{% when '2' or '22' %}nd
+{% when '3' or '23' %}rd
+{% else %}th{% endcase %}, {{ page.date | date: "%Y" }}</time>
+{% if page.author %} <span class="p-author h-card">by <span class="p-name">{{ page.author }}</span></span>{% endif %}
+      </p>
+    </header>
+  </article>
+</li>
+{% endfor %}
+</ol>

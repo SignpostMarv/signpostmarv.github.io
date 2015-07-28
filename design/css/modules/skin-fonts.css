@@ -1,0 +1,28 @@
+.has-font-noto-sans{
+  font-family: 'Noto Sans', sans-serif ;
+}
+.has-font-noto-serif ol > li:before,
+.has-font-noto-serif header > h1{
+  font-family: 'Noto Serif', serif ;
+}
+
+.has-font-roboto-mono code{
+  font-family: 'Roboto Mono', monospace ;
+}
+
+.has-font-fontawesome{
+  footer{
+    nav > ul{
+      li > a:before{
+        font-family: 'FontAwesome' ;
+        padding-right: .5em ;
+      }
+      > li.github > a:before{
+        content: '\f09b' ;
+      }
+      > li.twitter > a:before{
+        content: '\f099' ;
+      }
+    }
+  }
+}

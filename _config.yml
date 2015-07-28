@@ -1,0 +1,24 @@
+# Site settings
+title: SignpostMarv
+email: me@signpostmarv.name
+copyright: "SignpostMarv"
+description: > # this means to ignore newlines until "baseurl:"
+  SignpostMarv’s Blog; Thoughts of a Code Monkey
+baseurl: "" # the subpath of your site, e.g. /blog/
+url: "http://signpostmarv.github.io/" # the base hostname & protocol for your site
+twitter_username: SignpostMarv
+github_username:  SignpostMarv
+permalink: /:year/:month/:day/:title
+
+# Build settings
+markdown: kramdown
+exclude: [
+  Gemfile,
+  Gemfile.lock,
+  design,
+  bower_components,
+  node_modules,
+  bower.json,
+  Gruntfile.js,
+  package.json
+]

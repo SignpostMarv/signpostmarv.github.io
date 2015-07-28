@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>SignpostMarv's Blog</title>
+<base
+  href="http://sadako.localhost/new.signpostmarv.name/template-scratchpad/"
+>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="css/style.min.css">
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css?family=Noto+Sans%7CNoto+Serif"
+>
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css?family=Roboto+Mono%7CRoboto+Condensed"
+>
+<script
+  src="js/libs/fontfaceobserver/fontfaceobserver.js"
+></script>
+<script
+  src="js/libs/modernizr/modernizr.js"
+></script>
+<script
+  defer
+  src="js/fontfaceobserver.js"
+></script>
+</head>
+<body>
+<header>
+  <h1><a href="">SignpostMarv</a></h1>
+</header>
+<nav>
+  <ul>
+    <li><a href="thing-1">Thing One</a></li>
+    <li><a href="thing-2">Thing Two</a></li>
+  </ul>
+</nav>
+<main>
+  <article>
+    <p>Since writing the <a href="2011/02/10/deploying-opensim-on-windows-server-2008/comment-page-1/index.html">Windows Server 2008</a> guide I&#8217;ve changed how I deploy OpenSim and I&#8217;m also using Windows Server 2008 R2. These instructions also assume you&#8217;ll be developing your own patches, rather than pre-compiled binaries. These instructions will not cover &#8220;hardening&#8221; or other security-related aspects of managing Windows Server 2008 R2, nor will it cover fine-tuning performance of any of the software used. They also differ slightly from how deploy islands at work, i.e. I compile in c# express on my workstation rather than on the server.</p>
+    <h3 id=required-software>Required Software</h3>
+    <ol>
+    <li><a href="http://www.microsoft.com/en-gb/server-cloud/windows-server/2008-r2-trial.aspx">Windows Server 2008 R2</a></li>
+    <li><a href="http://www.microsoft.com/net/download/earlier-versions">.NET</a>. OpenSim currently uses .net 3.5.</li>
+    <li><p><a href="http://www.mysql.com/downloads/mysql/">MySQL</a> &#8211; you&#8217;ll want a 64bit installer.</p>
+    <ol>
+    <li><a href="http://www.microsoft.com/en-gb/server-cloud/windows-server/2008-r2-trial.aspx">Windows Server 2008 R2</a></li>
+    <li><a href="http://www.microsoft.com/net/download/earlier-versions">.NET</a>. OpenSim currently uses .net 3.5.</li>
+    <li><a href="http://www.mysql.com/downloads/mysql/">MySQL</a> &#8211; you&#8217;ll want a 64bit installer.</li>
+    <li>Git Bash from <a href="http://msysgit.github.com/">Git for Windows</a></li>
+    <li><a href="http://opensimulator.org/wiki/Developer_Documentation#Source_Code_Repository_Access">OpenSim source code</a></li>
+    </ol></li>
+    <li>Git Bash from <a href="http://msysgit.github.com/">Git for Windows</a></li>
+    <li><a href="http://opensimulator.org/wiki/Developer_Documentation#Source_Code_Repository_Access">OpenSim source code</a></li>
+    </ol>
+    <h4 id=optional>Optional Software</h4>
+    <p>These are optional tools that make certain tasks easier, but since they&#8217;re optional I won&#8217;t cover them here.</p>
+    <ul>
+    <li><a href="http://www.7-zip.org/">7-zip</a> Used for opening up the gzipped tarballs.</li>
+    <li><a href="http://www.mysql.com/products/workbench/">MySQL Workbench</a> If you need GUI access to the database without having to install software such as phpMyAdmin.</li>
+    <li><a href="http://notepad-plus-plus.org/">Notepad++</a> is more useful than the windows notepad and perhaps more convinient than vim under Git Bash.</li>
+    </ul>
+    <h3 id=windows-server-2008-r2>Windows Server 2008 R2</h3>
+    <p>I&#8217;ve found it best to have two accounts on the server- one for installing the software and another that OpenSim actually runs under- so make sure you have an account created as a <em>Standard user</em> and <em>not</em> an Administrator from the <strong>Create New Account</strong> window.</p>
+    <p>You&#8217;ll want to read the <a href="http://blogs.msdn.com/b/sqlblog/archive/2010/01/08/how-to-install-net-framework-3-5-sp1-on-windows-server-2008-r2-environments.aspx">MSDN blog article on installing .NET 3.5 on Windows Server 2008 R2</a>.</p>
+    <p>The instructions for configuring the Firewall haven&#8217;t changed much since <a href="2011/02/10/deploying-opensim-on-windows-server-2008/comment-page-1/index.html#firewall">the previous version of Windows Server 2008</a>, the only apparent difference being the ability specify port ranges.</p>
+    <section>
+    <h4 id=mysql>MySQL</h4>
+    <p>These instructions were written for mysql 5.5.27, installer options may change between versions.</p>
+    <ol>
+    <li>Accept the GPL license</li>
+    <li>Select <strong>Custom</strong> from <em>Choose Setup Type</em></li>
+    <li>Make sure that the <strong>MySQL Server</strong> and <strong>Client Programs</strong> features will be installed.</li>
+    <li>Click <strong>Install</strong>.</li>
+    <li>Close the popup for MySQL Enterprise.</li>
+    <li>Make sure that the checkbox for <q>Launch the MySQL Instance Configuration Wizard</q> is checked, then click <strong>Finish</strong>.</li>
+    <li>Select <strong>Detailed Configuration</strong>.</li>
+    <li>Select <strong>Server Machine</strong> for the server type.</li>
+    <li>Select <strong>Multifunctional Database</strong> for the database usage.</li>
+    <li>The <strong>InnoDB Tablespace Settings</strong> can probably be left as default.</li>
+    <li>For concurrent connections, the <strong>Decision Support (DSS)/OLAP</strong> option is probably sufficient.</li>
+    <li>Networking options can likely be left as default.</li>
+    <li>Set the <em>default character set</em> to <strong>Best Support for Multilingualism</strong>.</li>
+    <li>Tick the boxes for <strong>Install As Windows Service</strong> and <strong>Include Bin Directory in Windows PATH</strong>.</li>
+    <li>Select a password for the root account, being sure to note it down. You likely <strong>do not</strong> to <q>Enable root access from remote machines</q>, nor do you need to <q>Create An Anonymous Account</q>.</li>
+    <li><strong>Execute</strong> the configuration.</li>
+    </ol>
+    <h5 id=mysql-db-setup>Database Setup</h5>
+    <p>Now you&#8217;ve got MySQL installed, you&#8217;ll want to set up the database for OpenSim to use. Decide upon a password for the OpenSim database (and use that instead of <strong>&#8216;password&#8217;</strong>), then start the <strong>MySQL 5.5 Command Line Client</strong> and enter the following commands into the console, pressing enter after each line.</p>
+    <ol>
+    <li>CREATE DATABASE opensim;</li>
+    <li>CREATE USER &#8216;opensim&#8217;@&#8217;localhost&#8217; IDENTIFIED BY &#8216;password';</li>
+    <li>GRANT ALL PRIVILEGES ON opensim.* TO opensim@localhost IDENTIFIED BY &#8216;password';</li>
+    <li>FLUSH PRIVILEGES;</li>
+    <li>quit</li>
+    </ol>
+    <h4 id=git-for-windows>Git for Windows</h4>
+    <p>These instructions were written for Git 1.7.11-preview20120620, installer options may change between versions.</p>
+    <p>You could use GUI tools for getting the OpenSim source, but there&#8217;s some useful tools that come along with Git Bash!</p>
+    <ol>
+    <li>Accept the GPL license</li>
+    <li>The default install directory is probably sufficient.</li>
+    <li>You probably don&#8217;t need the <strong>Additional icons</strong>, nor do you likely need <strong>Windows Explorer integration</strong>. It is recommended to <em>not</em> <strong>Associate .sh files to be run with Bash</strong>.</li>
+    <li>The default <strong>Start Menu Folder</strong> is probably sufficient.</li>
+    <li>Select <strong>Use Git Bash Only</strong>.</li>
+    <li>Select <strong>Checkout Windows-style, commit Unix-style line endings</strong>.</li>
+    <li>You probably <em>don&#8217;t</em> need to <strong>View ReleaseNotes.rtf</strong></li>
+    </ol>
+    </section>
+    <p>Now you&#8217;ll want to log in as the OpenSim user you created earlier.</p>
+    <section>
+    <h4 id=opensim>OpenSim</h4>
+    <h5 id=building-opensim>Building OpenSim</h5>
+    <p>Start Git Bash and enter the following commands into the console, pressing Enter after each line.
+    <p>Do note that the <em>git clone</em> command can take a while, so have patience :)</p>
+    <ol>
+    <li>cd /c/</li>
+    <li>mkdir -p opensim/source</li>
+    <li>mkdir -p opensim/archive</li>
+    <li>mkdir -p opensim/dist</li>
+    <li>mkdir -p opensim/config</li>
+    <li>mkdir -p opensim/regions</li>
+    <li>cd opensim/source</li>
+    <li>git clone git://opensimulator.org/git/opensim</li>
+    <li>cd opensim</li>
+    <li>git checkout 0.7.3.1-release</li>
+    </ol>
+    <p>Now you&#8217;ll want to go to <strong>C:\opensim\source\opensim</strong> in Windows Explorer.</p>
+    <ol>
+    <li>Run the runprebuild2010.bat file.</li>
+    <li>Run the compile.bat file</li>
+    </ol>
+    <p>Now go back to the Git Bash console.</p>
+    <ol>
+    <li>cd bin</li>
+    <li>tar &#8211;exclude=&#8221;.*&#8221; -pvczf &#8220;../../../archive/opensim 0.7.3.1-release.tgz&#8221; * 1> /dev/null</li>
+    <li>cd ../</li>
+    <li>git clean -fxd</li>
+    <li>git checkout 0.7.4-rc2</li>
+    </ol>
+    <p>Now you&#8217;ll want to go to <strong>C:\opensim\source\opensim</strong> in Windows Explorer.</p>
+    <ol>
+    <li>Run the runprebuild2010.bat file.</li>
+    <li>Run the compile.bat file</li>
+    </ol>
+    <p>Now go back to the Git Bash console.</p>
+    <ol>
+    <li>cd bin</li>
+    <li>tar &#8211;exclude=&#8221;.*&#8221; -pvczf &#8220;../../../archive/opensim 0.7.4-rc2.tgz&#8221; * 1> /dev/null</li>
+    <li>cd ../</li>
+    <li>git clean -fxd</li>
+    <li>git checkout master</li>
+    </ol>
+    <p>Now you&#8217;ll want to go to <strong>C:\opensim\source\opensim</strong> in Windows Explorer.</p>
+    <ol>
+    <li>Run the runprebuild2010.bat file.</li>
+    <li>Run the compile.bat file</li>
+    </ol>
+    <p>Now go back to the Git Bash console.</p>
+    <ol>
+    <li>cd bin</li>
+    <li>tar &#8211;exclude=&#8221;.*&#8221; -pvczf &#8220;../../../archive/opensim master-`date +%Y-%m-%d_%H-%M-%S`.tgz&#8221; * 1> /dev/null</li>
+    <li>cd ../</li>
+    </ol>
+    <p>That might have been a little repetitive, but you now have builds of bleeding-edge OpenSim, 0.7.3.1-release and 0.7.4-rc2. This makes it quite easy to do testing of in-world features across different versions of OpenSim.</p>
+    <h5 id=opensim-robust>Setting up ROBUST</h5>
+    <p>In the <a href="index.html@p=556.html#building-opensim">previous step</a> we ended up with two releases of OpenSim as well as a build of the latest source. For purposes of stability, we&#8217;ll set up ROBUST to use 0.7.4-rc2 rather than the master branch. Go back to the Git Bash console.</p>
+    <ol>
+    <li>cd /c/opensim/dist</li>
+    <li>mkdir 0.7.4-rc2</li>
+    <li>cd 0.7.4-rc2</li>
+    <li>tar -zxvf &#8220;../../archive/opensim 0.7.4-rc2.tgz&#8221;</li>
+    <li>cd ../../config</li>
+    <li>cp ../dist/0.7.4-rc2/Robust.HG.ini.example ./Robust.HG.ini</li>
+    <li>cp ../dist/0.7.4-rc2/config-include/Grid.ini Grid.ini</li>
+    <li>cp ../dist/0.7.4-rc2/config-include/GridCommon.ini.example GridCommon.ini</li>
+    <li>vim Robust.bat</li>
+    </ol>
+    <p>We&#8217;re going to want to make it easier to change what version Robust uses at a later date, so we&#8217;re using a .bat file to have one place to make changes rather than several. Enter the following into the vim console:</p>
+<code>echo "Launching Robust"
+start "Robust 0.7.4-rc2" /D C:\opensim\dist\0.7.4-rc2\ /MIN "C:\opensim\dist\0.7.4-rc2\Robust.exe" -inifile "C:\opensim\config\Robust.HG.ini" -logconfig "C:\opensim\config\Robust.exe.config"
+  </code>
+    <p>To save the contents, press the Esc key then type <strong>:wq</strong> finally, press the Enter key.</p>
+    <p>Now the next step could either be done with <strong>vim</strong> in the Git Bash console or by opening the file in Notepad++ (which might make it easier for some people to read through).</p>
+    <ol>
+    <li>Open c:\opensim\config\Robust.exe.config</li>
+    <li>Change <strong>Robust.log</strong> to <strong>C:\opensim\config\Robust.log</strong></li>
+    <li>Save changes</li>
+    <li>Open c:\opensim\config\Robust.HG.ini</li>
+    <li>Go to the <strong>DatabaseService</strong> section of Robust.HG.ini and change the <strong>Password</strong> parameter of the <strong>ConnectionString</strong> to match the one you entered earlier on the MySQL console.</li>
+    <li>Change the values of the <strong>GridInfoService</strong> section to something appropriate to the network location of your server.</li>
+    <li>Save changes</li>
+    <li>Open c:\opensim\config\Grid.ini</li>
+    <li>Change the value of <strong>Include-Common</strong> to <strong>C:\opensim\config\GridCommon.ini</strong></li>
+    <li>Save changes</li>
+    <li>Open c:\opensim\config\GridCommon.ini</li>
+    <li>Comment out the <strong>Include-Storage</strong> line for <strong>SQLite</strong>.</li>
+    <li>Uncomment <strong>StorageProvider = &#8220;OpenSim.Data.MySQL.dll&#8221;</strong> and the <strong>ConnectionString</strong> line below it</li>
+    <li>As with Robust.HG.ini, change the value of the <strong>Password</strong> parameter.</li>
+    <li>Replace all instances of <strong>http://mygridserver.com</strong> with the address of your server.</li>
+    <li>Save changes</li>
+    </ol>
+    <p>You can now start Robust.exe by launching Robust.bat! If you want to change which version it uses in future, edit <strong>Robust.bat</strong> and replace all instances of <strong>C:\opensim\dist\0.7.4-rc2\</strong> with the new version directory.</p>
+    <p>Run <strong>Robust.bat</strong> by double-clicking it to set Robust away!</p>
+    <h5 id=opensim-1>OpenSim</h5>
+    <p>Now we want to get some islands set up! Go back to the Git Bash console.</p>
+    <ol>
+    <li>cd /c/opensim/regions</li>
+    <li>mkdir -p welcome/regions</li>
+    <li>mkdir -p welcome/backup</li>
+    <li>mkdir -p welcome/crashes</li>
+    <li>cd welcome</li>
+    <li>cp /c/opensim/dist/0.7.4-rc2/OpenSim.ini.example OpenSim.ini</li>
+    <li>cp /c/opensim/dist/0.7.4-rc2/OpenSim.exe.config OpenSim.exe.config</li>
+    <li>touch startup.txt</li>
+    <li>touch shutdown.txt</li>
+    <li>touch OpenSim.bat</li>
+    </ol>
+    <p>Now the next step could either be done with <strong>vim</strong> in the Git Bash console or by opening the file in Notepad++ (which might make it easier for some people to read through).</p>
+    <h6 id=opensim-ini>OpenSim.ini</h6>
+    <p>Open <strong>C:\opensim\regions\welcome\OpenSim.ini</strong></p>
+    <ol>
+    <li>Open <strong>C:\opensim\regions\welcome\OpenSim.ini</strong></li>
+    <li>In the <strong>Startup</strong> section, set
+    <ul>
+    <li>save_crashes = true</li>
+    <li>crash_dir = &#8220;C:\opensim\regions\welcome\crashes&#8221;</li>
+    <li>regionload_regionsdir = &#8220;C:\opensim\regions\welcome\regions\&#8221;</li>
+    </ul>
+    </li>
+    <li>In the <strong>Network</strong> section, set
+    <ul>
+    <li>http_listener_port = 9000</li>
+    </ul>
+    </li>
+    <li>In the <strong>Architecture</strong> section, set
+    <ul>
+    <li>Include-Architecture = &#8220;C:\opensim\config\Grid.ini&#8221;</li>
+    </ul>
+    </li>
+    <li>Save changes</li>
+    <li>Open <strong>C:\opensim\regions\welcome\OpenSim.exe.config</strong></li>
+    <li>Change <strong>OpenSim.log</strong> to <strong>C:\opensim\regions\welcome\OpenSim.log</strong></li>
+    <li>Save changes</li>
+    <li>Open <strong>C:\opensim\regions\welcome\OpenSim.bat</strong> &#038; enter the following:</li>
+    <li>
+    <code>echo "Launching OpenSim"
+    start "Welcome" /D C:\opensim\dist\0.7.4-rc2\ /MIN "C:\opensim\dist\0.7.4-rc2\OpenSim.exe" -inifile "C:\opensim\regions\welcome\OpenSim.ini" -logconfig "C:\opensim\regions\welcome\OpenSim.exe.config"</code>
+    </li>
+    <li>Save changes</li>
+    </ol>
+    <p>You can now launch <strong>C:\opensim\regions\welcome\OpenSim.bat</strong>, and follow the prompts in the OpenSim console to create your first region! You will likely be prompted to go back to the Robust console to perform the <strong>create user</strong> command when creating your first Estate.</p>
+    <p>For version testing, you&#8217;ll want to repeat the above instructions, but using the appropriate directory paths for each version (e.g. <em>C:\opensim\dist\0.7.3.1-release</em>).</p>
+    <p>For deploying new islands, repeat the above directions but using a different directory to <strong>welcome</strong>, such as <strong>sandbox</strong>. It helps to give the directories meaningful names! :D</p>
+    <h5 id=upgrading>Upgrading</h5>
+    <p><a href="http://opensimulator.org/wiki/Upgrading">Sensible precautions</a> should be taken when upgrading, such as backing up the database and config files. In order to switch a bunch of islands to a different version of OpenSim:</p>
+    <ol>
+    <li>enter the <strong>shutdown</strong> command on the appropriate OpenSim console.</li>
+    <li>open the relevant <strong>OpenSim.bat</strong> file.</li>
+    <li>change the file &#038; directory paths from the old version to the new version.</li>
+    <li>save changes &#038; reopen <strong>OpenSim.bat</strong></li>
+    </ol>
+  </section>
+  </article>
+</main>
+<footer>
+  <p>&copy; SignpostMarv</p>
+</footer>
+</body>
+</html>

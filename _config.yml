@@ -5,7 +5,7 @@ copyright: "SignpostMarv"
 description: > # this means to ignore newlines until "baseurl:"
   SignpostMarv’s Blog; Thoughts of a Code Monkey
 baseurl: "" # the subpath of your site, e.g. /blog/
-url: "https://blog.signpostmarv.name/" # the base hostname & protocol for your site
+url: "https://signpostmarv.name/" # the base hostname & protocol for your site
 twitter_username: SignpostMarv
 github_username:  SignpostMarv
 permalink: /:year/:month/:day/:title

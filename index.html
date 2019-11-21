@@ -1,26 +1,42 @@
----
-layout: default
----
-<ol class="hfeed">
-{% for page in site.posts %}
-<li>
-  <article class="h-entry">
-    <header>
-      <h1><a class="p-name" href="{{ page.url }}">{{ page.title }}</a></h1>
-{% if page.summary %}
-      <p class="p-summary">{{ page.summary }}</p>
-{% endif %}
-      <p><time class="dt-published" datetime="{{page.date | date: %FT%T%:z}}">
-{% assign d = page.date | date: "%-d"  %}
-{{ page.date | date: "%B %d" }}{% case d %}
-{% when '1' or '21' or '31' %}st
-{% when '2' or '22' %}nd
-{% when '3' or '23' %}rd
-{% else %}th{% endcase %}, {{ page.date | date: "%Y" }}</time>
-{% if page.author %} <span class="p-author h-card">by <span class="p-name">{{ page.author }}</span></span>{% endif %}
-      </p>
-    </header>
-  </article>
-</li>
-{% endfor %}
-</ol>
+<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta 
+content="width=device-width,initial-scale=1" name="viewport"><meta content="
+        Landing page for SignpostMarv.name,
+        describing profiles on third-party sites,
+        and things that I have been up to currently & previously.
+    " name="description"><title>SignpostMarv</title><link 
+href="./static/css/style.css" rel="stylesheet"></head><body><header><h1>
+SignpostMarv</h1><table><tbody><tr><th scope="row">Twitter</th><td><a 
+href="https://twitter.com/SignpostMarv" rel="noopener" target="_blank">
+@SignpostMarv</a></td></tr><tr><th scope="row" rowspan="2">GitHub</th><td><a 
+href="https://github.com/SignpostMarv" rel="noopener" target="_blank">
+@SignpostMarv</a></td></tr><tr><td><a href="https://github.com/daft-framework" 
+rel="noopener" target="_blank">daft-framework</a></td></tr><tr><th scope="row">
+Steam</th><td><a href="https://steamcommunity.com/id/SignpostMarv/" 
+rel="noopener" target="_blank">@SignpostMarv</a></td></tr></tbody></table>
+</header><main><article><header><h1>Things I have been up to.</h1></header><ul>
+<li>Various dayjob things.</li><li>Various <a 
+href="https://github.com/SignpostMarv" rel="noopener" target="_blank">
+Open Source</a> things.</li></ul></article><article><header><h1>
+Things I have been up to previously.</h1></header><ul><li>
+Appearing in the audience for a couple of episodes of <a 
+href="https://www.youtube.com/playlist?list=PL96C35uN7xGIo2odDuuPeYtb7BtQ1kBhp" 
+rel="noopener" target="_blank">Citation Needed</a> (recorded at YouTube London)
+</li><li>Working for Teeside University (both the <a 
+href="https://github.com/CCIR" rel="noopener" target="_blank" 
+title="Centre for Construction Innovation and Research">CCIR</a>) and the <a 
+href="https://twitter.com/teesunisohsc" rel="noopener" target="_blank">
+School of Health & Social Care</a>
+ (where laser scanning babies was discouraged)</li></ul></article><article>
+<header><h1>Old Content</h1></header><p><a 
+href="https://web.archive.org/web/20191120213514/https://signpostmarv.name/" 
+rel="noopener">Old content was archived on 2019-11-20</a>
+, Comments should be left on either:<br><a 
+href="https://twitter.com/SignpostMarv" rel="noopener" target="_blank">
+twitter (for general comments)</a>,<br><a 
+href="https://github.com/SignpostMarv/signpostmarv.github.io/issues" 
+rel="noopener">
+the GitHub repo for this site (to request old content to be updated/restored etc.)
+</a>, or<br><a href="https://github.com/signpostmarv/note-to-self/issues" 
+rel="noopener" target="_blank">
+the GitHub repo for my general to-do list of open-source work</a>.</p>
+</article></main></body></html>

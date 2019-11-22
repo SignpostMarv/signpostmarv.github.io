@@ -14,7 +14,7 @@
 
 :root
 {
-    --base-font-size: 24 ;
+    --base-font-size: 16 ;
     --base-font-size--rems: calc(1rem * var(--base-font-size)) ;
 }
 

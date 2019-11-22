@@ -138,6 +138,11 @@ ul,
 ol
 {
     list-style-position: inside ;
+
+    @media (min-width:816px)
+    {
+        list-style-position: outside ;
+    }
 }
 
 td,

@@ -18,6 +18,11 @@
     --base-font-size--rems: calc(1rem * var(--base-font-size)) ;
 }
 
+[hidden]
+{
+    display: none ;
+}
+
 html
 {
     font-size: calc(100vw / 320) ;
@@ -64,11 +69,17 @@ html
     }
 }
 
+body,
+body > header,
+body > main > article
+{
+    padding: .5em ;
+}
+
 body
 {
     font-size: var(--base-font-size--rems) ;
     min-height: 100% ;
-    padding: 1em ;
     max-width: 800px ;
     margin: 0 auto ;
 }

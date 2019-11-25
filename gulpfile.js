@@ -42,6 +42,14 @@ gulp.task('html', () => {
 	).pipe(gulp.dest('./tmp/'));
 });
 
+gulp.task('sync-img-to-tmp', () => {
+    return gulp.src('./src/static/**/*.{png,webp,jpg}').pipe(
+		gulp.dest(
+			'./tmp/static/'
+		)
+    );
+})
+
 gulp.task('sync-tmp-to-store', () => {
 	return gulp.src('./tmp/**/*.*').pipe(
 		changed(
@@ -60,7 +68,8 @@ gulp.task('sync-tmp-to-store', () => {
 gulp.task('default', gulp.series(
     gulp.parallel(
         'css',
-        'html'
+        'html',
+        'sync-img-to-tmp'
     ),
     'sync-tmp-to-store'
 ));

@@ -72,25 +72,43 @@
     margin-top: 1em ;
 }
 
+.progress-bars
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    z-index: 2;
+    flex-direction: column;
+    justify-content: stretch;
+}
+
 progress
 {
-    position: fixed ;
-    top: 0 ;
-    left: 0 ;
-    right: 0 ;
+    display: block ;
     width: 100% ;
-    height: 100% ;
+    height: auto ;
     appearance: none ;
     -webkit-appearance: none ;
     opacity: .1 ;
     z-index: 2;
-    transition: opacity 1s ease-in-out ;
+    transition: opacity 5s ease-in-out ;
+    flex: 1 1 auto ;
 }
 
 progress[value="1"]
 {
     opacity: 0 ;
     pointer-events: none ;
+}
+
+progress.done
+{
+    flex: 0 ;
 }
 
 audio
@@ -112,6 +130,7 @@ audio
     src="https://cdn.jsdelivr.net/npm/ipfs@0.41/dist/index.min.js"
 ></script>
 <script defer async>
+(async () => {
 const client = new WebTorrent();
 const ipfs_node = Ipfs.create();
 
@@ -125,7 +144,7 @@ const zelda25_torrent = new Promise((yup) => {
     });
 
     torrent.on('download', () => {
-        progress.value = torrent.progress;
+        torrent_progress.value = torrent.progress;
     });
 });
 
@@ -133,7 +152,13 @@ client.on('error', (err) => {
     console.error(err);
 });
 
-const progress = document.createElement('progress');
+const progress_bars = document.createElement('div');
+const torrent_progress = document.createElement('progress');
+const ipfs_mfs_progress = document.createElement('progress');
+
+progress_bars.addEventListener('transitionend', (e) => {
+    e.target.classList.add('done');
+});
 
 const bg_picture = document.createElement('picture');
 
@@ -143,88 +168,61 @@ const playback = document.createElement('audio');
 
 playback.controls = true;
 
-document.body.appendChild(progress);
+progress_bars.appendChild(torrent_progress);
+progress_bars.appendChild(ipfs_mfs_progress);
+progress_bars.classList.add('progress-bars');
+document.body.appendChild(progress_bars);
 document.body.appendChild(bg_picture);
 document.body.appendChild(playback);
 
 const file_map = new WeakMap();
 
-const ZELDA25_IPFS = {};
+let ipfs_count = 0;
+let ipfs_read = 0;
 
-ZELDA25_IPFS[
-    '/Artwork/Front (Legend) [Lisa Coffman].png'
-] = 'QmSKkLB8adTsToenfyFgPagT8qgLNbckpLnvaJ3SBYeyoz';
+async function ReadIpfsDir(cid, directory_alias = '/') {
+    const ipfs = await ipfs_node;
 
-ZELDA25_IPFS[
-    '/Artwork/Front (Triforce OCR Logo Edit) [Paul Veer, Liontamer].png'
-] = 'QmSUXoQEMfuSjYHWLutkxyNc5JLDiWnEZCjZjCwLzHjKpQ';
+    ++ipfs_count;
 
-ZELDA25_IPFS[
-    '/Artwork/Front (Triforce) 500 [Paul Veer].png'
-] = 'QmZEzRmrfvcYzUm7ksKks9vHacckDsQWjLJgp4xfSuW5QU';
+    console.log('trying to fetch /ipfs/' + cid);
 
-ZELDA25_IPFS[
-    '/Artwork/Front (Triforce) 700 [Paul Veer].png'
-] = 'QmNV9Cw9qhSQ976hHR3DHzBV3BSYNGhzQ6HQoM27tNmJqE';
+    const equivalent_of_torrent = await ipfs.files.ls(
+        '/ipfs/' + cid,
+        {long:true}
+    );
 
-ZELDA25_IPFS[
-    '/Artwork/Front (Triforce) 1000 [Paul Veer].png'
-] = 'QmPzxmnbMspQjarinZBKcbpqacQFMamLciJGQ7RD9d3ErL';
+    ++ipfs_read;
 
-ZELDA25_IPFS[
-    '/MP3/01 Disasterpeace - Chamber of the Goddess [A Link to the Past].mp3'
-] = 'QmYLZV9QMjgYVJbhFvd2nkXr47tVwh9rULFxqFWky7AHnt';
-ZELDA25_IPFS[
-    '/MP3/02 Rekcahdam - Gimme My Sword! [Link\'s Awakening - A Link to the Past].mp3'
-] = 'QmZg4edVREhuF3Gpo4jJTMhPUyEJaXJ4mhAbbh9XwAFoPp';
-ZELDA25_IPFS[
-    '/MP3/03 Laura Shigihara - Fushigina Forest [A Link to the Past].mp3'
-] = 'QmVewg615Ycb7gicLy9gyEe6mFt3voYLq3n8UG8k9dJvra';
-ZELDA25_IPFS[
-    '/MP3/04 Joshua Morse - Link\'s Epoch [A Link to the Past].mp3'
-] = 'QmfXnaNeADwWvnihXUuQ1qSy9GKcM6f3iMc8kAttcRJNjn';
-ZELDA25_IPFS[
-    '/MP3/05 Jeff Ball - Labyrinth of Dance Floors [A Link to the Past].mp3'
-] = 'Qmbk1Pri44UXKKpETeDQD7sYeTVJ2iVKcwPLyHxQDadVXz';
-ZELDA25_IPFS[
-    '/MP3/06 HyperDuck SoundWorks - Hoy, Small Fry! [Wind Waker - Ocarina of Time].mp3'
-] = 'QmXwEmdtcpEigj5DTbWR7RkjMAQ6svvrNZxEqwv6bh1ysJ';
-ZELDA25_IPFS[
-    '/MP3/07 Air & Sea - To Everything There Is a Temple of Seasons [Oracle of Seasons].mp3'
-] = 'QmcLk93jGjLoybcnETqSnWuute3hW6bQoLkUdpUdZQnhuc';
-ZELDA25_IPFS[
-    '/MP3/08 C418 - Skyward [Skyward Sword].mp3'
-] = 'QmTZF3nWieqcrYWuQJEJ7pZBNofeMorzCsXY5UEkq6YFS6';
-ZELDA25_IPFS[
-    '/MP3/09 Big Giant Circles feat. Jeff Ball - Thunderstruck [Ocarina of Time - Legend of Zelda].mp3'
-] = 'Qmd4cSDyd2UZqiahez1Dra6hHpGeMTZ58BPC617DenCznA';
-ZELDA25_IPFS[
-    '/MP3/10 Josh Whelchel - Zelda\'s First Trip to the \'Village\' [OOT - LTTP - LOZ].mp3'
-] = 'QmXNpxbnysnp6t2FPc8zUCG4aj1JCaDZtgw4AjGWjY9bXL';
-ZELDA25_IPFS[
-    '/MP3/11 MisfitChris - Village from Your Past [Ocarina of Time].mp3'
-] = 'QmXNTu6wJEoGoQgyB1CbbaZanTih17ED4WedBKN7x9tTbb';
-ZELDA25_IPFS[
-    '/MP3/12 Mattias Haggstrom Gerdt - Hey, Listen [Ocarina of Time - Legend of Zelda].mp3'
-] = 'QmdvfEpG2SbkUC2GJZXMUBcQtAFDCcr3kcMjhzfbZ9xNSn';
-ZELDA25_IPFS[
-    '/MP3/13 Kozilek - Last Dance of the Giants [Majora\'s Mask].mp3'
-] = 'QmSBZdXTLUYUqW8VaJofXS1HhWgEG9dYBgYeELny5BYPn7';
-ZELDA25_IPFS[
-    '/MP3/14 Gryzor87 - Ilia\'s Adagio Meets Dark March [Twilight Princess - A Link to the Past].mp3'
-] = 'QmWtPHvuL1hfw42QCLsiCNDomTuXGErzW7sRkoDUqM1huA';
-ZELDA25_IPFS[
-    '/MP3/15 Dong - Ballad of the Wind Fish (Kaze no Sakana Mix) [Link\'s Awakening].mp3'
-] = 'QmVrQQoj28WqBKd4K3qRWEntkBjFrTRLC5o6NHHqRMtifW';
-ZELDA25_IPFS[
-    '/MP3/16 CTPLR - Lon Lon Ranch (CTPLR Mix) [Ocarina of Time].mp3'
-] = 'QmVrQQoj28WqBKd4K3qRWEntkBjFrTRLC5o6NHHqRMtifW';
-ZELDA25_IPFS[
-    '/MP3/17 SoulEye - Link\'s Final Battle [Link\'s Adventure].mp3'
-] = 'QmYiCRzgxHxL9VGpVUMV9P2cdtvAJKxnn2iuZHWnLk6Baw';
-ZELDA25_IPFS[
-    '/MP3/18 Matheus Manente - Zelda\'s Graceful Nightmare [OOT - MM - WW].mp3'
-] = 'QmZXgs4XhingGhr2ShEuwazsjHy2ez7dkomNaLk18CVcPS';
+    const dir = {};
+
+    for await(const entry of equivalent_of_torrent) {
+        ipfs_mfs_progress.value = ipfs_read / ipfs_count;
+        if (0 === entry.type) {
+            dir[directory_alias + entry.name] = entry.cid.toString();
+            ++ipfs_count;
+            ++ipfs_read;
+        } else if (1 === entry.type) {
+            for (const subentry of Object.entries(await ReadIpfsDir(
+                cid + '/' + entry.name,
+                directory_alias + entry.name + '/'
+            ))) {
+                dir[subentry[0]] = subentry[1];
+            }
+        }
+        ipfs_mfs_progress.value = ipfs_read / ipfs_count;
+    }
+
+    console.log(ipfs_count, ipfs_read);
+
+    console.log(dir);
+
+    return dir;
+}
+
+const ZELDA25_IPFS = await ReadIpfsDir(
+    'QmXwQvnciFwhWocEp8h4rKM2ytTQDw44ScBRktmRuWSem6'
+);
 
 const FILE_PATH_IN_IPFS = Object.keys(ZELDA25_IPFS);
 
@@ -253,24 +251,6 @@ async function BlobUrlFromTorrent(path) {
 async function RaceToBlobUrl(path) {
     if (FILE_PATH_IN_IPFS.includes(path)) {
         return await Promise.race([
-            /*
-            fetch(
-                'https://cloudflare-ipfs.com/ipfs/' + ZELDA25_IPFS[path]
-            ).then((r) => {
-                return r.blob();
-            }).then((blob) => {
-                console.log('cloudflare gateway');
-                return URL.createObjectURL(blob);
-            }),
-            fetch(
-                'https://ipfs.io/ipfs/' + ZELDA25_IPFS[path]
-            ).then((r) => {
-                return r.blob();
-            }).then((blob) => {
-                console.log('ipfs gateway');
-                return URL.createObjectURL(blob);
-            }),
-            */
             BlobUrlFromTorrent(path),
             ipfs_node.then(async (ipfs_node) => {
                 console.log('trying to fetch via ipfs: ' + path);
@@ -393,4 +373,5 @@ const play = async (url) => {
 });
 
 document.body.appendChild(tracks);
+})();
 </script></body></html>

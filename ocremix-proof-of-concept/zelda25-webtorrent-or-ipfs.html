@@ -273,6 +273,8 @@ async function RaceToBlobUrl(path) {
             */
             BlobUrlFromTorrent(path),
             ipfs_node.then(async (ipfs_node) => {
+                console.log('trying to fetch via ipfs: ' + path);
+
                 const ipfs_cat = await ipfs_node.cat(
                     ZELDA25_IPFS[path]
                 );

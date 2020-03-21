@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<head>
+<style>
+.bg,
+.fg
+{
+    position: fixed ;
+    top: 0 ;
+    left: 0 ;
+    width: 100% ;
+    height: 100% ;
+    z-index: 1 ;
+}
+
+.fg
+{
+    width: 50% ;
+    z-index: 3 ;
+}
+
+.bg > img,
+.fg > img
+{
+    display: block ;
+    width: 100% ;
+    height: 100% ;
+    object-fit: cover ;
+}
+
+.fg > img
+{
+    max-width: 80% ;
+    max-height: 80% ;
+    object-fit: contain ;
+    position: absolute ;
+    top: 50% ;
+    left: 50% ;
+    transform: translate(-50%, -50%) ;
+}
+
+.tracks
+{
+    position: relative ;
+    margin-left: 50% ;
+    padding: 5% ;
+    z-index: 3 ;
+    list-style: inside none ;
+    display: block ;
+}
+
+.tracks audio
+{
+    display: block ;
+    width: 100% ;
+    margin-top: 1em ;
+}
+
+.tracks li
+{
+    background: rgba(0, 0, 0, .5) ;
+    padding: 1em ;
+    color: #fff ;
+}
+
+.tracks button
+{
+    margin-right: 1em ;
+}
+
+.tracks li:not(:first-child)
+{
+    margin-top: 1em ;
+}
+
+.progress-bars
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    z-index: 2;
+    flex-direction: column;
+    justify-content: stretch;
+}
+
+progress
+{
+    display: block ;
+    width: 100% ;
+    height: auto ;
+    appearance: none ;
+    -webkit-appearance: none ;
+    opacity: .1 ;
+    z-index: 2;
+    transition: opacity 5s ease-in-out ;
+    flex: 1 1 auto ;
+}
+
+progress[value="1"]
+{
+    opacity: 0 ;
+    pointer-events: none ;
+}
+
+progress.done
+{
+    flex: 0 ;
+}
+
+audio
+{
+    position: fixed ;
+    bottom: 5% ;
+    left: 5% ;
+    right: 5% ;
+    display: block ;
+    width: 90% ;
+    z-index: 4 ;
+}
+</style>
+</head>
+<body><script
+    src="https://cdn.jsdelivr.net/npm/webtorrent@0.107/webtorrent.min.js"
+></script>
+<script
+    src="https://cdn.jsdelivr.net/npm/ipfs@0.41/dist/index.min.js"
+></script>
+<script defer async>
+(async () => {
+const client = new WebTorrent();
+const ipfs_node = Ipfs.create();
+
+const zelda25 = 'magnet:?xt=urn:btih:612e10df1095bfb6eb85cdffa778defdbf62caaf&dn=25YEARLEGEND+-+A+Legend+of+Zelda+Indie+Game+Composer+Tribute&tr=http%3A%2F%2Fbt.ocremix.org%2Fannounce&tr=http%3A%2F%2Fbt2.ocremix.org%2Fannounce&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com';
+
+const zelda25_torrent = new Promise((yup) => {
+    const torrent = client.add(zelda25);
+
+    torrent.on('metadata', () => {
+        yup(torrent);
+    });
+
+    torrent.on('download', () => {
+        torrent_progress.value = torrent.progress;
+    });
+});
+
+client.on('error', (err) => {
+    console.error(err);
+});
+
+const progress_bars = document.createElement('div');
+const torrent_progress = document.createElement('progress');
+const ipfs_mfs_progress = document.createElement('progress');
+
+progress_bars.addEventListener('transitionend', (e) => {
+    e.target.classList.add('done');
+});
+
+const bg_picture = document.createElement('picture');
+
+bg_picture.classList.add('bg');
+
+const playback = document.createElement('audio');
+
+playback.controls = true;
+
+progress_bars.appendChild(torrent_progress);
+progress_bars.appendChild(ipfs_mfs_progress);
+progress_bars.classList.add('progress-bars');
+document.body.appendChild(progress_bars);
+document.body.appendChild(bg_picture);
+document.body.appendChild(playback);
+
+const file_map = new WeakMap();
+
+let ipfs_count = 0;
+let ipfs_read = 0;
+
+async function ReadIpfsDir(cid, directory_alias = '/') {
+    const ipfs = await ipfs_node;
+
+    ++ipfs_count;
+
+    console.log('trying to fetch /ipfs/' + cid);
+
+    const equivalent_of_torrent = await ipfs.files.ls(
+        '/ipfs/' + cid,
+        {long:true}
+    );
+
+    ++ipfs_read;
+
+    const dir = {};
+
+    for await(const entry of equivalent_of_torrent) {
+        ipfs_mfs_progress.value = ipfs_read / ipfs_count;
+        if (0 === entry.type) {
+            dir[directory_alias + entry.name] = entry.cid.toString();
+            ++ipfs_count;
+            ++ipfs_read;
+        } else if (1 === entry.type) {
+            for (const subentry of Object.entries(await ReadIpfsDir(
+                cid + '/' + entry.name,
+                directory_alias + entry.name + '/'
+            ))) {
+                dir[subentry[0]] = subentry[1];
+            }
+        }
+        ipfs_mfs_progress.value = ipfs_read / ipfs_count;
+    }
+
+    console.log(ipfs_count, ipfs_read);
+
+    console.log(dir);
+
+    return dir;
+}
+
+const ZELDA25_IPFS = await ReadIpfsDir(
+    'QmXwQvnciFwhWocEp8h4rKM2ytTQDw44ScBRktmRuWSem6'
+);
+
+const FILE_PATH_IN_IPFS = Object.keys(ZELDA25_IPFS);
+
+async function BlobUrlFromTorrent(path) {
+    return await new Promise(async (yup, nope) => {
+        const files = {};
+
+        console.log('awaiting torrent metadata for ' + path);
+
+        (await zelda25_torrent).files.forEach((file) => {
+            files[file.path.replace(zelda25_torrent.name, '')] = file;
+        });
+
+        console.log('awaiting blob url for ' + path);
+
+        files[path].getBlobURL((err, url) => {
+            if (err) {
+                nope(err);
+            } else {
+                yup(url);
+            }
+        });
+    });
+};
+
+async function RaceToBlobUrl(path) {
+    if (FILE_PATH_IN_IPFS.includes(path)) {
+        return await Promise.race([
+            BlobUrlFromTorrent(path),
+            ipfs_node.then(async (ipfs_node) => {
+                console.log('trying to fetch via ipfs: ' + path);
+
+                const ipfs_cat = await ipfs_node.cat(
+                    ZELDA25_IPFS[path]
+                );
+
+                const buffs = [];
+
+                for await (const buff of ipfs_cat) {
+                    buffs.push(buff);
+                }
+
+                console.log('js-ipfs');
+                return URL.createObjectURL(new Blob(buffs));
+            })
+        ]);
+    }
+
+    console.log('not in ipfs list, getting via torrent: ' + path);
+
+    return await BlobUrlFromTorrent(path);
+};
+
+RaceToBlobUrl('/Artwork/Front (Legend) [Lisa Coffman].png').then((url) => {
+    const picture = document.createElement('picture');
+    const img = new Image();
+
+    picture.classList.add('fg');
+
+    img.src = url;
+    img.width = img.height = 700;
+
+    picture.appendChild(img);
+
+    document.body.appendChild(picture);
+}).catch((err) => {
+    console.error(err);
+});
+
+RaceToBlobUrl(
+    '/Artwork/Front (Triforce OCR Logo Edit) [Paul Veer, Liontamer].png'
+).then((url) => {
+    const img = new Image();
+    const sources = [];
+
+    img.src = url;
+    img.width = img.height = 700;
+
+    bg_picture.appendChild(img);
+
+    Object.entries({
+        '500w': '/Artwork/Front (Triforce) 500 [Paul Veer].png',
+        '700w': '/Artwork/Front (Triforce) 700 [Paul Veer].png',
+        '1000w': '/Artwork/Front (Triforce) 1000 [Paul Veer].png',
+    }).forEach((entry) => {
+        const [width, file] = entry;
+
+        RaceToBlobUrl(file).then((url) => {
+            sources.push(url + ' ' + width);
+
+            img.srcset = sources.join(', ');
+        });
+    });
+}).catch((err) => {
+    console.error(err);
+});
+
+const tracks = document.createElement('ol');
+tracks.classList.add('tracks');
+
+const play = async (url) => {
+    await playback.pause();
+
+    playback.src = url;
+
+    await playback.play();
+};
+
+[
+    '/MP3/01 Disasterpeace - Chamber of the Goddess [A Link to the Past].mp3',
+    '/MP3/02 Rekcahdam - Gimme My Sword! [Link\'s Awakening - A Link to the Past].mp3',
+    '/MP3/03 Laura Shigihara - Fushigina Forest [A Link to the Past].mp3',
+    '/MP3/04 Joshua Morse - Link\'s Epoch [A Link to the Past].mp3',
+    '/MP3/05 Jeff Ball - Labyrinth of Dance Floors [A Link to the Past].mp3',
+    '/MP3/06 HyperDuck SoundWorks - Hoy, Small Fry! [Wind Waker - Ocarina of Time].mp3',
+    '/MP3/07 Air & Sea - To Everything There Is a Temple of Seasons [Oracle of Seasons].mp3',
+    '/MP3/08 C418 - Skyward [Skyward Sword].mp3',
+    '/MP3/09 Big Giant Circles feat. Jeff Ball - Thunderstruck [Ocarina of Time - Legend of Zelda].mp3',
+    '/MP3/10 Josh Whelchel - Zelda\'s First Trip to the \'Village\' [OOT - LTTP - LOZ].mp3',
+    '/MP3/11 MisfitChris - Village from Your Past [Ocarina of Time].mp3',
+    '/MP3/12 Mattias Haggstrom Gerdt - Hey, Listen [Ocarina of Time - Legend of Zelda].mp3',
+    '/MP3/13 Kozilek - Last Dance of the Giants [Majora\'s Mask].mp3',
+    '/MP3/14 Gryzor87 - Ilia\'s Adagio Meets Dark March [Twilight Princess - A Link to the Past].mp3',
+    '/MP3/15 Dong - Ballad of the Wind Fish (Kaze no Sakana Mix) [Link\'s Awakening].mp3',
+    '/MP3/16 CTPLR - Lon Lon Ranch (CTPLR Mix) [Ocarina of Time].mp3',
+    '/MP3/17 SoulEye - Link\'s Final Battle [Link\'s Adventure].mp3',
+    '/MP3/18 Matheus Manente - Zelda\'s Graceful Nightmare [OOT - MM - WW].mp3',
+].forEach((path) => {
+    const filename = path.substr(5, path.length - 9);
+    const li = document.createElement('li');
+
+    const button = document.createElement('button');
+    button.disabled = true;
+    button.appendChild(document.createTextNode('▶'));
+    button.setAttribute('aria-label', 'Play ' + filename);
+    li.appendChild(button);
+
+    li.appendChild(document.createTextNode(filename));
+
+    tracks.appendChild(li);
+
+    RaceToBlobUrl(path).catch((err) => {console.error(err);}).then((url) => {
+        button.disabled = false;
+        button.onclick = () => {
+            play(url);
+        };
+    });
+});
+
+document.body.appendChild(tracks);
+})();
+</script></body></html>

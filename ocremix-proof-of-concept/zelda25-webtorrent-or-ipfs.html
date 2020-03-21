@@ -1,7 +1,4 @@
-<!DOCTYPE html>
-<head>
-<style>
-.bg,
+<!DOCTYPE html><head><style>.bg,
 .fg
 {
     position: fixed ;
@@ -120,17 +117,10 @@ audio
     display: block ;
     width: 90% ;
     z-index: 4 ;
-}
-</style>
-</head>
-<body><script
-    src="https://cdn.jsdelivr.net/npm/webtorrent@0.107/webtorrent.min.js"
-></script>
-<script
-    src="https://cdn.jsdelivr.net/npm/ipfs@0.41/dist/index.min.js"
-></script>
-<script defer async>
-(async () => {
+}</style></head><body><script 
+src="https://cdn.jsdelivr.net/npm/webtorrent@0.107/webtorrent.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ipfs@0.41/dist/index.min.js">
+</script><script async defer>(async () => {
 const client = new WebTorrent();
 const ipfs_node = Ipfs.create();
 
@@ -373,5 +363,4 @@ const play = async (url) => {
 });
 
 document.body.appendChild(tracks);
-})();
-</script></body></html>
+})();</script></body>

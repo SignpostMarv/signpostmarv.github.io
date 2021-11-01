@@ -1,8 +1,9 @@
 {
   "scripts": {
-    "build": "gulp"
+    "build": "eleventy && gulp"
   },
   "dependencies": {
+    "@11ty/eleventy": "^0.12.1",
     "cssnano": "^5.0.8",
     "gulp": "^4.0.2",
     "gulp-changed": "^4.0.3",

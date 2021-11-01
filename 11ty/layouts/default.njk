@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<title>{{title}}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="og:article:modified_time" content="{{page.date.toUTCString()}}">
+<link rel="stylesheet" href="/static/css/style.css">
+<link rel="shortcut icon" href="/static/logo/16w.png">
+</head>
+<body>
+	<header>
+		<h1><a href="/">SignpostMarv</a></h1>
+	</header>
+	<main>
+		<article class="post">
+			<header>
+				<h1>{{title}}</h1>
+			</header>
+			<section>{{content | safe}}</section>
+		</article>
+	</main>
+</body>
+</html>

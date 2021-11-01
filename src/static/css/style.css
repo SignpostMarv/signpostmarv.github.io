@@ -16,6 +16,10 @@
 {
     --base-font-size: 16 ;
     --base-font-size--rems: calc(1rem * var(--base-font-size)) ;
+    --base-header-font-size: 40rem ;
+    --base-header-font-size--narrow: 96rem ;
+	--article-header-font-size: 24rem ;
+	--article-header-font-size--narrow: calc(var(--article-header-font-size) * 2.4) ;
 }
 
 [hidden]
@@ -86,61 +90,61 @@ body
 
 h1
 {
-    font-size: calc(var(--base-font-size--rems) + (((40rem - var(--base-font-size--rems)) / 6)) * 6) ;
+    font-size: calc(var(--base-font-size--rems) + (((var(--base-header-font-size) - var(--base-font-size--rems)) / 6)) * 6) ;
 
     @media (min-width: 768px)
     {
-        font-size: calc(var(--base-font-size--rems) + (((96rem - var(--base-font-size--rems)) / 6)) * 6) ;
+        font-size: calc(var(--base-font-size--rems) + (((var(--base-header-font-size--narrow) - var(--base-font-size--rems)) / 6)) * 6) ;
     }
 }
 
 h2
 {
-    font-size: calc(var(--base-font-size--rems) + (((40rem - var(--base-font-size--rems)) / 6)) * 5) ;
+    font-size: calc(var(--base-font-size--rems) + (((var(--base-header-font-size) - var(--base-font-size--rems)) / 6)) * 5) ;
 
     @media (min-width: 768px)
     {
-        font-size: calc(var(--base-font-size--rems) + (((96rem - var(--base-font-size--rems)) / 6)) * 5) ;
+        font-size: calc(var(--base-font-size--rems) + (((var(--base-header-font-size--narrow) - var(--base-font-size--rems)) / 6)) * 5) ;
     }
 }
 
 h3
 {
-    font-size: calc(var(--base-font-size--rems) + (((40rem - var(--base-font-size--rems)) / 6)) * 4) ;
+    font-size: calc(var(--base-font-size--rems) + (((var(--base-header-font-size) - var(--base-font-size--rems)) / 6)) * 4) ;
 
     @media (min-width: 768px)
     {
-        font-size: calc(var(--base-font-size--rems) + (((96rem - var(--base-font-size--rems)) / 6)) * 4) ;
+        font-size: calc(var(--base-font-size--rems) + (((var(--base-header-font-size--narrow) - var(--base-font-size--rems)) / 6)) * 4) ;
     }
 }
 
 h4
 {
-    font-size: calc(var(--base-font-size--rems) + (((40rem - var(--base-font-size--rems)) / 6)) * 3) ;
+    font-size: calc(var(--base-font-size--rems) + (((var(--base-header-font-size) - var(--base-font-size--rems)) / 6)) * 3) ;
 
     @media (min-width: 768px)
     {
-        font-size: calc(var(--base-font-size--rems) + (((96rem - var(--base-font-size--rems)) / 6)) * 3) ;
+        font-size: calc(var(--base-font-size--rems) + (((var(--base-header-font-size--narrow) - var(--base-font-size--rems)) / 6)) * 3) ;
     }
 }
 
 h5
 {
-    font-size: calc(var(--base-font-size--rems) + (((40rem - var(--base-font-size--rems)) / 6)) * 2) ;
+    font-size: calc(var(--base-font-size--rems) + (((var(--base-header-font-size) - var(--base-font-size--rems)) / 6)) * 2) ;
 
     @media (min-width: 768px)
     {
-        font-size: calc(var(--base-font-size--rems) + (((96rem - var(--base-font-size--rems)) / 6)) * 2) ;
+        font-size: calc(var(--base-font-size--rems) + (((var(--base-header-font-size--narrow) - var(--base-font-size--rems)) / 6)) * 2) ;
     }
 }
 
 h6
 {
-    font-size: calc(var(--base-font-size--rems) + (((40rem - var(--base-font-size--rems)) / 6)) * 1) ;
+    font-size: calc(var(--base-font-size--rems) + (((var(--base-header-font-size) - var(--base-font-size--rems)) / 6)) * 1) ;
 
     @media (min-width: 768px)
     {
-        font-size: calc(var(--base-font-size--rems) + (((96rem - var(--base-font-size--rems)) / 6)) * 1) ;
+        font-size: calc(var(--base-font-size--rems) + (((var(--base-header-font-size--narrow) - var(--base-font-size--rems)) / 6)) * 1) ;
     }
 }
 
@@ -152,6 +156,15 @@ ol
     @media (min-width:816px)
     {
         list-style-position: outside ;
+    }
+}
+
+li
+{
+    > ol,
+    > ul
+    {
+        margin-left: 1em ;
     }
 }
 
@@ -168,33 +181,71 @@ article
         margin-top: 1em ;
     }
 
+	&.post
+	{
+		h1
+		{
+			font-size: calc(var(--base-font-size--rems) + (((var(--article-header-font-size) - var(--base-font-size--rems)) / 6)) * 6) ;
+		}
+
+		h2
+		{
+			font-size: calc(var(--base-font-size--rems) + (((var(--article-header-font-size) - var(--base-font-size--rems)) / 6)) * 5) ;
+		}
+
+		h3
+		{
+			font-size: calc(var(--base-font-size--rems) + (((var(--article-header-font-size) - var(--base-font-size--rems)) / 6)) * 4) ;
+		}
+
+		h4
+		{
+			font-size: calc(var(--base-font-size--rems) + (((var(--article-header-font-size) - var(--base-font-size--rems)) / 6)) * 3) ;
+		}
+
+		h5
+		{
+			font-size: calc(var(--base-font-size--rems) + (((var(--article-header-font-size) - var(--base-font-size--rems)) / 6)) * 2) ;
+		}
+
+		h6
+		{
+			font-size: calc(var(--base-font-size--rems) + (((var(--article-header-font-size) - var(--base-font-size--rems)) / 6)) * 1) ;
+		}
+	}
+
     h1
     {
-        font-size: calc(var(--base-font-size--rems) + (((40rem - var(--base-font-size--rems)) / 6)) * 6) ;
+        font-size: calc(var(--base-font-size--rems) + (((var(--base-header-font-size) - var(--base-font-size--rems)) / 6)) * 6) ;
     }
 
     h2
     {
-        font-size: calc(var(--base-font-size--rems) + (((40rem - var(--base-font-size--rems)) / 6)) * 5) ;
+        font-size: calc(var(--base-font-size--rems) + (((var(--base-header-font-size) - var(--base-font-size--rems)) / 6)) * 5) ;
     }
 
     h3
     {
-        font-size: calc(var(--base-font-size--rems) + (((40rem - var(--base-font-size--rems)) / 6)) * 4) ;
+        font-size: calc(var(--base-font-size--rems) + (((var(--base-header-font-size) - var(--base-font-size--rems)) / 6)) * 4) ;
     }
 
     h4
     {
-        font-size: calc(var(--base-font-size--rems) + (((40rem - var(--base-font-size--rems)) / 6)) * 3) ;
+        font-size: calc(var(--base-font-size--rems) + (((var(--base-header-font-size) - var(--base-font-size--rems)) / 6)) * 3) ;
     }
 
     h5
     {
-        font-size: calc(var(--base-font-size--rems) + (((40rem - var(--base-font-size--rems)) / 6)) * 2) ;
+        font-size: calc(var(--base-font-size--rems) + (((var(--base-header-font-size) - var(--base-font-size--rems)) / 6)) * 2) ;
     }
 
     h6
     {
-        font-size: calc(var(--base-font-size--rems) + (((40rem - var(--base-font-size--rems)) / 6)) * 1) ;
+        font-size: calc(var(--base-font-size--rems) + (((var(--base-header-font-size) - var(--base-font-size--rems)) / 6)) * 1) ;
     }
+}
+
+img
+{
+    max-width: 100% ;
 }

@@ -1,8 +1,12 @@
 {
+  "scripts": {
+    "build": "gulp"
+  },
   "dependencies": {
     "cssnano": "^5.0.8",
     "gulp": "^4.0.2",
     "gulp-changed": "^4.0.3",
+    "gulp-cli": "^2.3.0",
     "gulp-htmlmin": "^5.0.1",
     "gulp-newer": "^1.4.0",
     "gulp-postcss": "^9.0.1",

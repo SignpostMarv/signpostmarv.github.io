@@ -1,3 +1,9 @@
+---
+title: December 2021 Sponsors Update
+date: Last Modified
+permalink: "{{page.filePathStem}}.html"
+layout: default
+---
 # Secret Updates
 - Added 3 videos to secret project number 2
 - Processed 1 of the previously-uploaded and 1 of the recently uploaded videos for secret project number 2

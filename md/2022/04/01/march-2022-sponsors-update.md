@@ -1,3 +1,9 @@
+---
+title: March 2022 Sponsors Update
+date: Last Modified
+permalink: "{{page.filePathStem}}.html"
+layout: default
+---
 # General Updates
 - Updated blog to Eleventy 1.0
 - fixed [bug in media-search-archive re: uncategorised clips](https://github.com/Satisfactory-Clips-Archive/Media-Search-Archive/issues/19)

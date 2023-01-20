@@ -3,6 +3,7 @@ title: February 2022 Sponsors Update
 date: Last Modified
 permalink: "{{page.filePathStem}}.html"
 layout: default
+tags: sponsorUpdates
 ---
 # General Updates
 - Stopped including "uploaded videos" to all the things in these updates, because unless work is split between months it's kinda redundant.

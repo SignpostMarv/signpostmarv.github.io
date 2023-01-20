@@ -3,6 +3,7 @@ title: June 2022 Sponsors Update
 date: Last Modified
 permalink: "{{page.filePathStem}}.html"
 layout: default
+tags: sponsorUpdates
 ---
 # General Updates
 * Made one of the secret projects [not so secret](https://qasite.satisfactory.video/)

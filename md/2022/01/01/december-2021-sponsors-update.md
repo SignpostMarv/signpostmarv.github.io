@@ -3,6 +3,7 @@ title: December 2021 Sponsors Update
 date: Last Modified
 permalink: "{{page.filePathStem}}.html"
 layout: default
+tags: sponsorUpdates
 ---
 # Secret Updates
 - Added 3 videos to secret project number 2

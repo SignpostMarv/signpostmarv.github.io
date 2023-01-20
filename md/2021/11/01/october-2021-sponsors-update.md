@@ -3,6 +3,7 @@ title: October 2021 Sponsors Update
 date: Last Modified
 permalink: "{{page.filePathStem}}.html"
 layout: default
+tags: sponsorUpdates
 ---
 # Satisfactory Clips Archive
 
